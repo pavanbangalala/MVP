@@ -4,24 +4,28 @@ package holyape.com.mvpdemo;
  * Created by Pavan Bangalala on 06/01/17.
  */
 
-public class LoginPresenter implements ILoginPresenter {
+public class LoginPresenter implements ILoginPresenter,ILoginFinishListener {
 
     private IMainActivity mainActivity;
-    private ILoginModel loginModel;
+    private IAsyncLoginModel loginModel;
 
     public LoginPresenter(IMainActivity view){
         this.mainActivity = view;
-        loginModel = new LoginModel();
+        loginModel = new AsyncLoginModel();
     }
 
     @Override
     public void attempLogin(String name, String password) {
-        boolean isSuccess = loginModel.validateCredentials(name,password);
-        if(isSuccess){
-            mainActivity.loginSuccess();
-        }
-        else{
-            mainActivity.loginFailed();
-        }
+        loginModel.validateCredentials(this,name,password);
+    }
+
+    @Override
+    public void loginFailed() {
+        mainActivity.loginFailed();
+    }
+
+    @Override
+    public void loginSuccess() {
+        mainActivity.loginSuccess();
     }
 }
