@@ -1,0 +1,60 @@
+package holyape.com.mvpdemo;
+
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Optional;
+
+public class MainActivity extends AppCompatActivity  implements IMainActivity{
+
+
+    Toolbar toolbar;
+    EditText editTextName;
+    EditText editTextPassword;
+    Button btnLogin;
+    LinearLayout main_container;
+    private ILoginPresenter loginPresenter;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
+        setContentView(R.layout.activity_main);
+        toolbar = (Toolbar)findViewById(R.id.main_toolbar);
+        editTextName = (EditText)findViewById(R.id.main_etName);
+        editTextPassword = (EditText)findViewById(R.id.main_etPassword);
+        btnLogin = (Button)findViewById(R.id.main_btnLogin);
+        main_container = (LinearLayout)findViewById(R.id.activity_main);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginPresenter.attempLogin(editTextName.getText().toString(),editTextPassword.getText().toString());
+            }
+        });
+        toolbar.setTitle("MVP Demo");
+        loginPresenter = new LoginPresenter(this);
+    }
+
+
+
+    @Override
+    public void loginSuccess() {
+        Snackbar.make(main_container,"Login Success",Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void loginFailed() {
+        Snackbar.make(main_container,"Login Failed",Snackbar.LENGTH_LONG).show();
+    }
+}
